@@ -1,0 +1,117 @@
+//-----------Client------------------
+#include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+int main(){
+        int sock, serverport, n, count;
+        char buf[20];
+        struct sockaddr_in server_addr;
+        serverport = 13000;
+        sock = socket(AF_INET, SOCK_STREAM, 0);
+        if(sock<0)
+        {
+                printf("Socket Error...\n");
+                return 1;
+        }
+        server_addr.sin_family = AF_INET;
+        inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr.s_addr);
+        server_addr.sin_port = htons(serverport);
+        connect(sock, (struct sockaddr *) &server_addr, sizeof(server_addr));
+        n = read(sock , buf , 8);
+        printf("length is %d, message is \n %s \n",n,buf);
+        close(sock);
+}
+
+//---------------Server-------------------
+  GNU nano 2.2.6                                       File: server.c
+
+#include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+int main(){
+        int sock1, condf;
+        socklen_t len;
+        struct sockaddr_in server_addr, client_addr;
+        //Open socket
+        sock1 = socket(AF_INET, SOCK_STREAM, 0);
+        if (sock1 < 0){
+                printf("Socket Error...\n");
+                return 1;
+        }
+        server_addr.sin_family = AF_INET;
+        server_addr.sin_addr.s_addr = INADDR_ANY;
+        server_addr.sin_port = htons(13000);
+
+        if(bind(sock1,(struct sockaddr *) &server_addr, sizeof(struct sockaddr))== -1){
+                printf("bind error\n");
+                return 1;
+        }
+        listen(sock1,100);
+        len = sizeof(struct sockaddr);
+        condf = accept(sock1, (struct sockaddr *) &client_addr, &len);
+        write(condf, "HIUAAAA",8);
+        close(condf);
+        close(sock1);
+}
+//--------------HomeWork-------------------------
+  GNU nano 2.2.6                                                    File: server.c
+
+#include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <string.h>
+int main(){
+        int sock1, condf,count;
+        socklen_t len;
+        char str[30];
+        struct sockaddr_in server_addr, client_addr;
+        //Open socket
+        sock1 = socket(AF_INET, SOCK_STREAM, 0);
+        if (sock1 < 0){
+                printf("Socket Error...\n");
+                return 1;
+        }
+        server_addr.sin_family = AF_INET;
+        server_addr.sin_addr.s_addr = INADDR_ANY;
+        server_addr.sin_port = htons(13000);
+
+        if(bind(sock1,(struct sockaddr *) &server_addr, sizeof(struct sockaddr))== -1){
+                printf("bind error\n");
+                return 1;
+        }
+        while(1){
+        memset(str,'\0',strlen(str));
+        sprintf(str,"Your count is %d",count);
+        listen(sock1,100);
+        len = sizeof(struct sockaddr);
+        condf = accept(sock1, (struct sockaddr *) &client_addr, &len);
+        write(condf,str ,30);
+        count++;
+        close(condf);}
+        close(sock1);
+}
+//-----------------Client-------------------
+  GNU nano 2.2.6                                                    File: client.c
+
+#include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+int main(){
+        int sock, serverport, n, count;
+        char buf[30];
+        struct sockaddr_in server_addr;
+        serverport = 13000;
+        sock = socket(AF_INET, SOCK_STREAM, 0);
+        if(sock<0)
+        {
+                printf("Socket Error...\n");
+                return 1;
+        }
+        server_addr.sin_family = AF_INET;
+        inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr.s_addr);
+        server_addr.sin_port = htons(serverport);
+        connect(sock, (struct sockaddr *) &server_addr, sizeof(server_addr));
+        n = read(sock , buf , 30);
+        printf("length is %d, message is \n %s \n",n,buf);
+        close(sock);
+}

@@ -1,0 +1,6 @@
+1. GNU prolog http://www.gprolog.org/
+2. install
+3. open txt, programming, save to ".prolog"
+4. to GNU-Prolog\bin and open gporlog.exe
+5. input consult(filename(don't need .prolog)) ex: consult(relation).
+6. start asking question
